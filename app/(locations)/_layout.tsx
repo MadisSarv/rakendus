@@ -17,7 +17,7 @@ const LocationsLayout = () => {
 
   console.log('SIIN parentis', id);
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Stack
       // screenOptions={{
       //   headerShown: false,
