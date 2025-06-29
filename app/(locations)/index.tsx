@@ -40,6 +40,7 @@ const Locations = () => {
   const { colors } = useTheme();
   const styles = makeStyles(colors);
 
+  console.log('SIIN', locations);
   const [openItems, setOpenItems] = useState<number[]>([]);
 
   const toggleOpen = (name: number) => {
