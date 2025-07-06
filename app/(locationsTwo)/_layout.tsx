@@ -23,10 +23,10 @@ const LocationsLayout = () => {
       //   headerShown: false,
       // }}
       >
-        <Stack.Screen name="location" options={{ title: 'Asukohad' }} />
-        <Stack.Screen name="index" options={{ title: 'Asukohad ja masinad' }} />
+        <Stack.Screen name="locationTwo" options={{ title: 'Asukohad2' }} />
+
         <Stack.Screen
-          name="machine/[id]"
+          name="machineTwo/[id]"
           options={({ route }: any) => ({
             title: route.params?.machineName ?? 'Machine',
           })}
