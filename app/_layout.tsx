@@ -16,14 +16,7 @@ import LocalizationContext from '../contexts/LocalizationContext';
 import i18n, { Locale } from '../i18n';
 import { store } from '../store/store';
 
-// export const i18n = new I18n({
-//   en: { hello: 'Hello', changeLanguage: 'Change language' },
-//   et: { hello: 'Tere', changeLanguage: 'Muuda keelt' },
-// });
-
 export default function RootLayout() {
-  // const locale = useSelector(localeSelector);
-
   const [iconsLoaded, setIconsLoaded] = useState(false);
 
   const [locale, setLocale] = useState(Locale.Et);
@@ -35,8 +28,6 @@ export default function RootLayout() {
     }),
     [locale],
   );
-
-  //getLocales()[0].languageCode!
 
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
@@ -52,10 +43,6 @@ export default function RootLayout() {
   useEffect(() => {
     loadIcons();
   }, []);
-
-  // useEffect(() => {
-  //   i18n.locale = locale;
-  // }, [locale]);
 
   if (!loaded || !iconsLoaded) {
     // Async font loading only occurs in development.
