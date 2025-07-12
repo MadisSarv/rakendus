@@ -1,19 +1,109 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Drawer, useTheme } from 'react-native-paper';
+import { useContext, useState } from 'react';
+import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Button, DataTable, Text, useTheme } from 'react-native-paper';
+import { MD3Colors } from 'react-native-paper/lib/typescript/types';
 import { useSelector } from 'react-redux';
-import {
-  Location,
-  locationsSelector,
-  Machine,
-} from '../../store/locations/locationsSlice';
+import LocalizationContext from '../../contexts/LocalizationContext';
+import { Locale } from '../../i18n';
+import { locationsSelector } from '../../store/locations/locationsSlice';
 
-const makeStyles = (colors: any) =>
+const Locations = () => {
+  const router = useRouter();
+  const { t, locale, setLocale } = useContext(LocalizationContext);
+
+  const locations = useSelector(locationsSelector);
+  const { colors } = useTheme();
+  const styles = makeStyles(colors);
+
+  const [openItems, setOpenItems] = useState<number[]>([]);
+
+  const toggleOpen = (id: number) => {
+    if (openItems.includes(id)) {
+      setOpenItems((prev) => prev.filter((item) => item !== id));
+    } else {
+      setOpenItems((prev) => [...prev, id]);
+    }
+  };
+
+  const isInOpen = (name: number) => {
+    return openItems.includes(name);
+  };
+
+  const navToMachine = (id: number) => {
+    router.navigate(`/machine/${id}`);
+  };
+
+  const changeLanguage = () => {
+    if (locale === Locale.Et) {
+      setLocale(Locale.En);
+    } else {
+      setLocale(Locale.Et);
+    }
+  };
+
+  return (
+    <View style={styles.locationsContainer}>
+      <ScrollView style={styles.drawerContainer}>
+        <DataTable>
+          <DataTable.Header>
+            <DataTable.Title>{t('location.name')}</DataTable.Title>
+            <DataTable.Title numeric>
+              {t('location.machine_count')}
+            </DataTable.Title>
+          </DataTable.Header>
+
+          <Button onPress={changeLanguage}>{t('change_language')}</Button>
+
+          {locations.map((item) => (
+            <>
+              <TouchableOpacity onPress={() => toggleOpen(item.id)}>
+                <DataTable.Row key={item.id}>
+                  <DataTable.Cell>{item.name}</DataTable.Cell>
+                  <DataTable.Cell numeric>{item.noOfMachines}</DataTable.Cell>
+                </DataTable.Row>
+              </TouchableOpacity>
+
+              {isInOpen(item.id) &&
+                item.floors?.map((floor) => (
+                  <View style={styles.floorContainer}>
+                    <Text>
+                      {t('location.floor_no', { count: floor.floorNr })}
+                    </Text>
+
+                    {floor.machines.map((machine) => (
+                      <TouchableOpacity
+                        onPress={() => navToMachine(machine.id)}
+                      >
+                        <DataTable.Row
+                          key={machine.id}
+                          style={styles.machineItemStyles}
+                        >
+                          <DataTable.Cell>{machine.name}</DataTable.Cell>
+                          <DataTable.Cell numeric>
+                            <Ionicons name="arrow-forward" />
+                          </DataTable.Cell>
+                        </DataTable.Row>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                ))}
+            </>
+          ))}
+        </DataTable>
+      </ScrollView>
+    </View>
+  );
+};
+
+export default Locations;
+
+const makeStyles = (colors: MD3Colors) =>
   StyleSheet.create({
     drawerContainer: {
       width: '100%',
+      minHeight: '100%',
     },
 
     locationsContainer: {
@@ -23,78 +113,27 @@ const makeStyles = (colors: any) =>
       height: '100%',
     },
 
-    drawerItem: {
-      borderRadius: 0,
-      borderBottomColor: 'black',
+    machineItemStyles: {
+      marginVertical: 2,
+      marginHorizontal: 10,
+      paddingLeft: 20,
+      backgroundColor: colors.primaryContainer,
     },
 
-    dropDownItem: {
-      paddingLeft: 20,
-      borderRadius: 0,
+    customButtonStyles: {
+      paddingHorizontal: 15,
+      borderRadius: 10,
+      backgroundColor: colors.primary,
+      color: 'white',
+    },
+
+    lightText: {
+      fontWeight: '500',
+      letterSpacing: 2,
+      color: 'white',
+    },
+
+    floorContainer: {
+      margin: 20,
     },
   });
-
-const Locations = () => {
-  const router = useRouter();
-  const locations = useSelector(locationsSelector);
-  const { colors } = useTheme();
-  const styles = makeStyles(colors);
-
-  console.log('SIIN', locations);
-  const [openItems, setOpenItems] = useState<number[]>([]);
-
-  const toggleOpen = (name: number) => {
-    if (openItems.includes(name)) {
-      setOpenItems((prev) => prev.filter((item) => item !== name));
-    } else {
-      setOpenItems((prev) => [...prev, name]);
-    }
-  };
-
-  const isInOpen = (name: number) => {
-    return openItems.includes(name);
-  };
-
-  return (
-    <View style={styles.locationsContainer}>
-      <View style={styles.drawerContainer}>
-        <Drawer.Section>
-          <View>
-            {locations &&
-              locations.map((location: Location) => (
-                <View key={location.id}>
-                  <Drawer.Item
-                    style={styles.drawerItem}
-                    label={location.name}
-                    active={isInOpen(location.id)}
-                    onPress={() => toggleOpen(location.id)}
-                    right={() => (
-                      <Ionicons
-                        name={isInOpen(location.id) ? 'arrow-up' : 'arrow-down'}
-                      />
-                    )}
-                  />
-                  {isInOpen(location.id) && (
-                    <>
-                      {location.machines.map((machine: Machine) => (
-                        <Drawer.Item
-                          key={machine.id}
-                          style={styles.dropDownItem}
-                          label={machine.name}
-                          onPress={() =>
-                            router.navigate(`/machine/${machine.id}`)
-                          }
-                        />
-                      ))}
-                    </>
-                  )}
-                </View>
-              ))}
-          </View>
-        </Drawer.Section>
-      </View>
-    </View>
-  );
-};
-
-export default Locations;

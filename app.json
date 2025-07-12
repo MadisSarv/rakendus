@@ -37,9 +37,7 @@
       [
         "expo-font",
         {
-          "fonts": [
-            "./node_modules/@react-native-vector-icons/material-design-icons/fonts/MaterialDesignIcons.ttf"
-          ]
+          "fonts": ["./assets/fonts/MaterialDesignIcons.ttf"]
         }
       ]
     ],

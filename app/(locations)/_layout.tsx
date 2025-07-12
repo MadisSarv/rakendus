@@ -1,21 +1,13 @@
 import { Stack, useLocalSearchParams } from 'expo-router';
-import { useEffect } from 'react';
+import { useContext } from 'react';
 import { View } from 'react-native';
-import { useSelector } from 'react-redux';
-import { machineSelector } from '../../store/locations/locationsSlice';
-import { RootState } from '../../store/store';
+import LocalizationContext from '../../contexts/LocalizationContext';
 
 const LocationsLayout = () => {
   const { id } = useLocalSearchParams();
-  const machine = useSelector((state: RootState) =>
-    machineSelector(state, Number(id)),
-  );
 
-  useEffect(() => {
-    console.log('SIIN ID MUUTUS', id);
-  }, [id]);
+  const { t } = useContext(LocalizationContext);
 
-  console.log('SIIN parentis', id);
   return (
     <View style={{ flex: 1 }}>
       <Stack
@@ -23,12 +15,12 @@ const LocationsLayout = () => {
       //   headerShown: false,
       // }}
       >
-        <Stack.Screen name="location" options={{ title: 'Asukohad' }} />
-        <Stack.Screen name="index" options={{ title: 'Asukohad ja masinad' }} />
+        <Stack.Screen name="location" options={{ title: t('locations') }} />
+
         <Stack.Screen
           name="machine/[id]"
           options={({ route }: any) => ({
-            title: route.params?.machineName ?? 'Machine',
+            title: route.params?.machineName ?? t('machine.machine'),
           })}
         />
       </Stack>
