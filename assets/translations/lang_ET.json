@@ -1,0 +1,16 @@
+{
+  "name": "Nimetus",
+  "home": "Kodu",
+  "user_info": "Kasutaja info",
+  "locations": "Asukohad",
+  "location": {
+    "name": "Asukoha nimetus",
+    "machine_count": "Masinate arv",
+    "floor_no": "Korrus %{count}"
+  },
+  "machine": {
+    "machine": "Masin",
+    "machine_name": "Masina nimetus : %{name}"
+  },
+  "change_language": "Muuda keelt"
+}
