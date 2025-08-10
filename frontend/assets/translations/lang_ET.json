@@ -10,7 +10,9 @@
   },
   "machine": {
     "machine": "Masin",
-    "machine_name": "Masina nimetus : %{name}"
+    "machine_name": "Nimetus : %{name}",
+    "machine_floor": "Korrus : %{floor}",
+    "machine_address": "Aadress : %{address} (korrus %{floor})"
   },
   "change_language": "Muuda keelt"
 }
