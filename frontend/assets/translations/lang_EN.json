@@ -10,7 +10,9 @@
   },
   "machine": {
     "machine": "Machine",
-    "machine_name": "Machine name : %{name}"
+    "machine_name": "Name : %{name}",
+    "machine_floor": "Floor : %{floor}",
+    "machine_address": "Address : %{address} (korrus %{floor})"
   },
   "change_language": "Change language"
 }
